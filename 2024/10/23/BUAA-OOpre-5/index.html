@@ -1,0 +1,251 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>BUAA_OOpre_5 | Chères étoile</title><meta name="author" content="étoile"><meta name="copyright" content="étoile"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Lecture 5  如何管理对象 对象与引用： （1）对象是什么：  对象是程序通过new产生的实例  对象是堆内存中的一个区域，包含属性数据和指向类的指针 方法定义在类中而不是对象中  （2）对象引用是什么：  指向对象内存地址的指针，用以访问对象成员及其属性和方法 对象引用可能为null 改变对象引用的取值不会导致被引用对象数据的改变  （3）区别与联系  当堆中某个对象无法被程序访问时，J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUAA_OOpre_5">
+<meta property="og:url" content="http://example.com/2024/10/23/BUAA-OOpre-5/index.html">
+<meta property="og:site_name" content="Chères étoile">
+<meta property="og:description" content="Lecture 5  如何管理对象 对象与引用： （1）对象是什么：  对象是程序通过new产生的实例  对象是堆内存中的一个区域，包含属性数据和指向类的指针 方法定义在类中而不是对象中  （2）对象引用是什么：  指向对象内存地址的指针，用以访问对象成员及其属性和方法 对象引用可能为null 改变对象引用的取值不会导致被引用对象数据的改变  （3）区别与联系  当堆中某个对象无法被程序访问时，J">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/OOpre_5.jpg">
+<meta property="article:published_time" content="2024-10-23T15:11:08.000Z">
+<meta property="article:modified_time" content="2024-10-23T15:11:49.897Z">
+<meta property="article:author" content="étoile">
+<meta property="article:tag" content="面向对象">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/OOpre_5.jpg"><link rel="shortcut icon" href="/img/tag.png"><link rel="canonical" href="http://example.com/2024/10/23/BUAA-OOpre-5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUAA_OOpre_5',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-23 23:11:49'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/transpancy.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head_img.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/OOpre_5.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Chères étoile"><span class="site-name">Chères étoile</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">BUAA_OOpre_5</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-23T15:11:08.000Z" title="发表于 2024-10-23 23:11:08">2024-10-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-23T15:11:49.897Z" title="更新于 2024-10-23 23:11:49">2024-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/BUAA/">BUAA</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="BUAA_OOpre_5"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="Lecture-5-如何管理对象"><a href="#Lecture-5-如何管理对象" class="headerlink" title="Lecture 5  如何管理对象"></a>Lecture 5  如何管理对象</h2><ol>
+<li><p>对象与引用：</p>
+<p>（1）对象是什么：</p>
+<ul>
+<li>对象是程序通过new产生的实例 </li>
+<li>对象是堆内存中的一个区域，包含属性数据和指向类的指针</li>
+<li>方法定义在类中而不是对象中</li>
+</ul>
+<p>（2）对象引用是什么：</p>
+<ul>
+<li>指向对象内存地址的指针，用以访问对象成员及其属性和方法</li>
+<li>对象引用可能为<code>null</code></li>
+<li>改变对象引用的取值不会导致被引用对象数据的改变</li>
+</ul>
+<p>（3）区别与联系</p>
+<ul>
+<li>当堆中某个对象无法被程序访问时，Java垃圾回收机制会自动回收内存。</li>
+<li>改变对象内容的唯一方法是通过对象引用去访问其修改方法</li>
+<li>对象引用是一个变量（类似于C语言的指针型变量），对象引用内容的改变可以随时通过变量赋值实现</li>
+</ul>
+</li>
+<li><p>Java常见容器及其作用：</p>
+<p>（1）<code>ArrayList</code>：可伸缩数组</p>
+<p>（2）<code>LinkedList</code>：可伸缩链表</p>
+<ul>
+<li>优点：当我们需要<strong>保持对象的顺序关系</strong>并且<strong>按照下标访问</strong>时，采用<code>ArrayList</code>或者<code>LinkedList</code>是比较好且比较简单的选择</li>
+<li>缺点：查找某个对象需要遍历，查找速度较慢</li>
+</ul>
+<p>（3）<code>HashMap</code>：哈希表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Adeventurer</span> &#123;</span><br><span class="line">    <span class="comment">//parameters</span></span><br><span class="line">    <span class="keyword">public</span> HashMap&lt;Integer,Adventurer&gt; Adventurers = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(); <span class="comment">//声明一个储存Adeventurer类的容器</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AdventurerOperation</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addAdventurer</span><span class="params">(<span class="type">int</span> advId, String advName)</span> &#123; <span class="comment">//给HashMap添加元素</span></span><br><span class="line">        <span class="type">Adeventurer</span> <span class="variable">adventurer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Adventurer</span>(<span class="comment">/*parameter*/</span>); <span class="comment">//创造一个新的Adventurer对象</span></span><br><span class="line">        adventurers.put(advId,adventurer); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>HashMap</code>是一个基于哈希表的键值对映射，其中元素没有固定顺序</li>
+<li>不允许重复键</li>
+</ul>
+<p>（4）<code>HashSet</code>：哈希集</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Adventurer</span> &#123;</span><br><span class="line">    <span class="comment">//parameters</span></span><br><span class="line">    HashSet&lt;Bottle&gt; bottles;</span><br><span class="line">    <span class="comment">//构造方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">newAdvBottle</span> <span class="params">(Adventurer adventurer)</span> &#123;</span><br><span class="line">        adventurer.bottles = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;(); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//添加元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addBottle</span> <span class="params">(Bottle bottle)</span> &#123;</span><br><span class="line">        bottles.add(bottle);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//删除元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeBottle</span> <span class="params">(Bottle bottle)</span> &#123;</span><br><span class="line">        bottles.remove(bottle);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//判断是否包含元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasBottle</span> <span class="params">(Bottle bottle)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> bottles.contains(bottle);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//遍历</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">printAll</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Bottle obj : bottles) &#123;</span><br><span class="line">            System.out.println(obj.getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>HashSet</code>是基于哈希表实现的无序集合，不允许储存重复的元素，它的本质是只存key的<code>HashMap</code></p>
+</li>
+<li><p>优点：保持集合元素的互异，当需要<strong>实现自动去重功能</strong>去管理对象的时候，使用<code>HashSet</code>是比较好的选择</p>
+</li>
+<li>缺点：内部储存无序</li>
+</ul>
+</li>
+<li><p>层次化对象管理方法</p>
+<ul>
+<li>使用容器管理一组对象</li>
+<li>一个对象可以内置容器来管理其下一层次的对象</li>
+</ul>
+<p>对象之间的关系可以分为组合关系与聚合关系</p>
+<p>（1）组合关系（composition）：</p>
+<p>多个对象组合形成一个更大的对象，如车轮，发动机等组合形成汽车</p>
+<p>组合关系中的上层建筑以对象引用或容器作为属性变量，形成对象之间整体和部分的结构</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Engine engine;</span><br><span class="line">    <span class="keyword">private</span> Wheel wheel;       <span class="comment">// 对象引用属性作为属性变量</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Car</span> <span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.engine = <span class="keyword">new</span> <span class="title class_">Engine</span>;</span><br><span class="line">        <span class="built_in">this</span>.wheel = <span class="keyword">new</span> <span class="title class_">Wheel</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（2）聚合关系（Aggregation）：</p>
+<p>以对象引用作为其成员变量，对象引用可为<code>null</code></p>
+<p><code>Adventurer</code>类与<code>Bottle</code>类和<code>Equipment</code>类的关系就是聚合关系</p>
+<p>这与组合逻辑的区别在于：发动机，车轮等构成了车，没有车轮就不会构成车，这是一种整体与部分的关系。但是冒险者可以没有水瓶而仍然是冒险者，这是一种拥有与被拥有的关系。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">étoile</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/10/23/BUAA-OOpre-5/">http://example.com/2024/10/23/BUAA-OOpre-5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Chères étoile</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a></div><div class="post_share"><div class="social-share" data-image="/OOpre_5.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/10/23/BUAA-CO-P3/" title="BUAA_CO_P3"><img class="cover" src="/img/CO_P3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BUAA_CO_P3</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/09/22/BUAA-OOpre-3/" title="BUAA_OOpre_3"><img class="cover" src="/img/OOpre_3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-22</div><div class="title">BUAA_OOpre_3</div></div></a></div><div><a href="/2024/09/22/BUAA-OOpre-1/" title="BUAA_OOpre_1"><img class="cover" src="/img/OOpre_1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-22</div><div class="title">BUAA_OOpre_1</div></div></a></div><div><a href="/2024/09/22/BUAA-OOpre-2/" title="BUAA_OOpre_2"><img class="cover" src="/img/OOpre_2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-22</div><div class="title">BUAA_OOpre_2</div></div></a></div><div><a href="/2024/09/29/BUAA-OOpre-4/" title="BUAA_OOpre_4"><img class="cover" src="/img/OOpre_4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-29</div><div class="title">BUAA_OOpre_4</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">étoile</div><div class="author-info__description">人生海海 山山而川</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lecture-5-%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">Lecture 5  如何管理对象</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/10/23/BUAA-OOpre-5/" title="BUAA_OOpre_5"><img src="/OOpre_5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA_OOpre_5"/></a><div class="content"><a class="title" href="/2024/10/23/BUAA-OOpre-5/" title="BUAA_OOpre_5">BUAA_OOpre_5</a><time datetime="2024-10-23T15:11:08.000Z" title="发表于 2024-10-23 23:11:08">2024-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/23/BUAA-CO-P3/" title="BUAA_CO_P3"><img src="/img/CO_P3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA_CO_P3"/></a><div class="content"><a class="title" href="/2024/10/23/BUAA-CO-P3/" title="BUAA_CO_P3">BUAA_CO_P3</a><time datetime="2024-10-23T03:54:32.000Z" title="发表于 2024-10-23 11:54:32">2024-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/21/BUAA-CO-P2/" title="BUAA_CO_P2"><img src="/img/CO_P2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA_CO_P2"/></a><div class="content"><a class="title" href="/2024/10/21/BUAA-CO-P2/" title="BUAA_CO_P2">BUAA_CO_P2</a><time datetime="2024-10-21T09:09:06.000Z" title="发表于 2024-10-21 17:09:06">2024-10-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/10/BUAA-CO-P1/" title="BUAA-CO-P1"><img src="/img/CO_P1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA-CO-P1"/></a><div class="content"><a class="title" href="/2024/10/10/BUAA-CO-P1/" title="BUAA-CO-P1">BUAA-CO-P1</a><time datetime="2024-10-10T06:34:44.000Z" title="发表于 2024-10-10 14:34:44">2024-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/03/MachineLearning-1/" title="线性神经网络"><img src="/img/MachineL_1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线性神经网络"/></a><div class="content"><a class="title" href="/2024/10/03/MachineLearning-1/" title="线性神经网络">线性神经网络</a><time datetime="2024-10-03T07:58:21.000Z" title="发表于 2024-10-03 15:58:21">2024-10-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By étoile</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
