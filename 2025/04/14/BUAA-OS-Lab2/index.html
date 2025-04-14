@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>BUAA-OS-Lab2 | Chères étoile</title><meta name="author" content="étoile"><meta name="copyright" content="étoile"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Lab2：内存管理[toc] 访存流程概览内核态内核态是操作系统运行的一种状态，与用户态相对，在这种状态下，计算机系统赋予了操作系统内核最高的权限。包括但不限于：  拥有最高权限：CPU可执行指令集中的所有指令，包括特权指令，进而直接访问和控制关键资源和硬件。 访问所有内存空间。 处理中断和异常。 系统资源管理：如CPU时间片分配，进程的创建与销毁等。  内存布局在我们设计的MOS操作系统中，内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUAA-OS-Lab2">
+<meta property="og:url" content="http://example.com/2025/04/14/BUAA-OS-Lab2/index.html">
+<meta property="og:site_name" content="Chères étoile">
+<meta property="og:description" content="Lab2：内存管理[toc] 访存流程概览内核态内核态是操作系统运行的一种状态，与用户态相对，在这种状态下，计算机系统赋予了操作系统内核最高的权限。包括但不限于：  拥有最高权限：CPU可执行指令集中的所有指令，包括特权指令，进而直接访问和控制关键资源和硬件。 访问所有内存空间。 处理中断和异常。 系统资源管理：如CPU时间片分配，进程的创建与销毁等。  内存布局在我们设计的MOS操作系统中，内存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/OS_2.jpg">
+<meta property="article:published_time" content="2025-04-14T03:59:57.000Z">
+<meta property="article:modified_time" content="2025-04-14T04:06:50.677Z">
+<meta property="article:author" content="étoile">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/OS_2.jpg"><link rel="shortcut icon" href="/img/tag.png"><link rel="canonical" href="http://example.com/2025/04/14/BUAA-OS-Lab2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUAA-OS-Lab2',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-04-14 12:06:50'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mycss.css"><link rel="stylesheet" href="/css/transpancy.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head_img.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/OS_2.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Chères étoile"><span class="site-name">Chères étoile</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">BUAA-OS-Lab2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-04-14T03:59:57.000Z" title="发表于 2025-04-14 11:59:57">2025-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-04-14T04:06:50.677Z" title="更新于 2025-04-14 12:06:50">2025-04-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/BUAA/">BUAA</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="BUAA-OS-Lab2"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Lab2：内存管理"><a href="#Lab2：内存管理" class="headerlink" title="Lab2：内存管理"></a><code>Lab2</code>：内存管理</h1><p>[toc]</p>
+<h2 id="访存流程概览"><a href="#访存流程概览" class="headerlink" title="访存流程概览"></a>访存流程概览</h2><h3 id="内核态"><a href="#内核态" class="headerlink" title="内核态"></a>内核态</h3><p>内核态是操作系统运行的一种状态，与用户态相对，在这种状态下，计算机系统赋予了操作系统内核最高的权限。包括但不限于：</p>
+<ul>
+<li>拥有最高权限：CPU可执行指令集中的所有指令，包括特权指令，进而直接访问和控制关键资源和硬件。</li>
+<li>访问所有内存空间。</li>
+<li>处理中断和异常。</li>
+<li>系统资源管理：如CPU时间片分配，进程的创建与销毁等。</li>
+</ul>
+<h3 id="内存布局"><a href="#内存布局" class="headerlink" title="内存布局"></a>内存布局</h3><p>在我们设计的<code>MOS</code>操作系统中，内存的布局以及虚实映射关系如下：</p>
+<ul>
+<li>虚拟地址：<code>0x00000000</code> ~ <code>0x7fffffff</code>（<code>kuseg</code>），这<code>2GB</code>空间用于存放用户程序代码与数据。<strong>需要通过<code>TLB</code>转化为物理地址，再通过cache访存</strong>。</li>
+<li>虚拟地址：<code>0x80000000</code> ~ <code>0x9fffffff</code>（<code>kseg0</code>），这<code>512MB</code>空间用于存放内核代码与数据。<strong>将虚拟地址的最高位置零得到物理地址，通过cache访存</strong>。</li>
+<li>虚拟地址：<code>0xa0000000</code> ~ <code>0xbfffffff</code>（<code>kseg1</code>），这<code>512MB</code>空间可以用于访问外存，<strong>将虚拟地址的最高三位置零得到物理地址，不通过cache访存</strong></li>
+<li>虚拟地址：<code>0xc0000000</code> ~ <code>0xffffffff</code>（<code>kseg2</code>），这<code>1GB</code>空间<strong>只能在内核态下使用，并且需要通过<code>TLB</code>转化为物理地址，通过cache访存</strong></li>
+</ul>
+<p>在<code>4Kc</code>（实验所用CPU）中，通过硬件<code>MMU</code>来完成上述地址映射，<code>MMU</code>中集成了<code>TLB</code>。对所有第<code>2GB</code>空间的访存都需要经过<code>TLB</code>。</p>
+<p><img src="D:\blog\source\images\OS_L2_G1.png" alt="image-20250329132755543"></p>
+<p><img src="/images/OS_L2_G1.png" alt="OS_L2_G1" title="file"></p>
+
+<h2 id="内核程序启动"><a href="#内核程序启动" class="headerlink" title="内核程序启动"></a>内核程序启动</h2><p><code>mips_init</code>函数是在基于MIPS架构的操作系统内核代码里出现的一个初始化函数。它的主要作用是对 MIPS 架构相关的硬件和软件环境进行初始化操作。它需要调用调用如下函数</p>
+<h3 id="mips-detect-memory-u-int-memsize"><a href="#mips-detect-memory-u-int-memsize" class="headerlink" title="mips_detect_memory(u_int _memsize)"></a><code>mips_detect_memory(u_int _memsize)</code></h3><p>该函数作用是探测硬件可用内存，并对一些和内存管理相关的变量进行初始化。</p>
+<h3 id="mips-vm-init"><a href="#mips-vm-init" class="headerlink" title="mips_vm_init()"></a><code>mips_vm_init()</code></h3><p>该函数作用是建立一些用于管理的数据结构。</p>
+<p>为了建立起内存管理机制，还需要用到<code>alloc</code>函数来分配内存空间。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> staticvoid *<span class="title function_">alloc</span><span class="params">(u_intn,u_intalign, intclear)</span> &#123;</span><br><span class="line"> 	<span class="keyword">extern</span> charend[];</span><br><span class="line"> 	u_long alloced_mem;</span><br><span class="line">     </span><br><span class="line"> 	<span class="keyword">if</span>(freemem== <span class="number">0</span>) &#123;</span><br><span class="line"> 		freemem = (u_long)end;<span class="comment">//end</span></span><br><span class="line"> 	&#125;</span><br><span class="line"> 	freemem = ROUND(freemem,align);</span><br><span class="line"> 	alloced_mem= freemem;</span><br><span class="line"> 	freemem = freemem +n;</span><br><span class="line"> 	<span class="keyword">if</span>(PADDR(freemem) &gt;=memsize)&#123;</span><br><span class="line"> 		panic(<span class="string">&quot;outofmemory&quot;</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	<span class="keyword">if</span>(clear) &#123;</span><br><span class="line"> 		<span class="built_in">memset</span>((<span class="type">void</span> *)alloced_mem,<span class="number">0</span>, n);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> (<span class="type">void</span> *)alloced_mem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>extern char end[]</code>：外部变量 end，它表示内核代码和全局变量所占用内存的结束地址。在<code>MOS</code>系统中，end对应虚拟地址<code>0x80400000</code>，根据对应规则，转化为物理地址就是<code>0x00400000</code>。我们从该地址开始进行内存分配。</li>
+<li><code>ROUND(freemem, align)</code>：作用是将<code>freemem</code>按照<code>align</code>向上对齐，例如<code>freemem</code>为101，<code>align</code>为4，则对齐后为104。</li>
+<li><code>if (clear) &#123;...&#125;</code>：当<code>clear</code>为真，该函数会将这一部分内存清零。</li>
+</ul>
+<p>实现完分配函数后，我们要完成对内存管理数据结构的空间分配。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">mips_vm_init</span><span class="params">()</span> &#123;</span><br><span class="line"> 	pages = (<span class="keyword">struct</span> Page *)alloc(npage * <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Page), PAGE_SIZE, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用<code>alloc</code>函数为物理内存管理所用到的<code>Page</code>结构体按页分配物理内存。</p>
+<h2 id="物理内存管理"><a href="#物理内存管理" class="headerlink" title="物理内存管理"></a>物理内存管理</h2><p>MOS中的内存管理使用页式内存管理，采用链表法管理空闲物理页框。</p>
+<h3 id="页控制块"><a href="#页控制块" class="headerlink" title="页控制块"></a>页控制块</h3><p>MOS中维护了<code>npage</code>个页控制块，也就是<code>Page</code>结构体。每一个页控制块对应一页的物理内存，MOS用这个结构体来按页管理物理内存的分配。</p>
+<p>将空闲物理页对应的<code>Page</code>结构体全部插入一个链表中，该链表被称为空闲链表，即<code>page_free_list</code>。 当一个进程需要分配内存时，就需要将空闲链表头部的页控制块对应的那一页物理内存分配出去，同时将该页控制块从空闲链表中删去。 当一页物理内存被使用完毕（准确来说，引用次数为0）时，将其对应的页控制块重新插入到空闲链表的头部。</p>
+<h2 id="虚拟内存管理"><a href="#虚拟内存管理" class="headerlink" title="虚拟内存管理"></a>虚拟内存管理</h2><p>前面已经提到，MOS中用<code>PADDR(x)</code>宏可以将位于<code>kseg0</code>的虚拟地址x转化为对应的物理地址。<code>KADDR(x)</code>宏可以返回物理地址x位于<code>kseg0</code>的虚拟地址。</p>
+<h3 id="两级页表结构"><a href="#两级页表结构" class="headerlink" title="两级页表结构"></a>两级页表结构</h3><p>第一级页表称为页目录（<code>Page Directory</code>），第二级页表称为页表（<code>Page Table</code>）。</p>
+<p>对于一个32位的虚存地址，其31-22位，共10位表示的是一级页表项的偏移量。21-12位，共10位表示的是二级页表项的偏移量。11-0位，共12位表示的是页内偏移量。</p>
+<p><code>include/mmu.h</code>中提供了两个宏以快速获取偏移量，<code>PDX(va)</code>可以获取虚拟地址<code>va</code>的31-22 位，<code>PTX(va)</code> 可以获取虚拟地址<code>va</code>的21-12 位。</p>
+<p>一级页表与二级页表的结构相同：1024个页表项 + 每个页表项32位（20位物理页号 + 高6位硬件标志位 + 低6位软件标志位）。每个页表<code>4KB</code>，刚好是一个物理页面的大小。</p>
+<h2 id="访问内存与TLB重填"><a href="#访问内存与TLB重填" class="headerlink" title="访问内存与TLB重填"></a>访问内存与<code>TLB</code>重填</h2><h3 id="TLB组成"><a href="#TLB组成" class="headerlink" title="TLB组成"></a><code>TLB组成</code></h3><p><code>TLB</code>是页表的高速缓存，是一种硬件，用于缓存最近使用过的虚拟页号（<code>VPN</code>）和对应的物理页框号（<code>PPN</code>）的映射关系，以加快虚拟地址到物理地址的转化速度。</p>
+<p>每个<code>TLB</code>表项都有两个组成部分，包括一组Key和两组Data。<code>EntryLo0</code>存储<code>Key</code>对应的偶页而<code>EntryLo1</code>存储 <code>Key</code>对应的奇页。</p>
+<p>当<code>TLB</code>缺失时， <code>EntryHi</code>中的<code>VPN</code>自动（由硬件）填充为对应虚拟地址的虚页号。</p>
+<h3 id="4Kc处理器架构"><a href="#4Kc处理器架构" class="headerlink" title="4Kc处理器架构"></a><code>4Kc</code>处理器架构</h3><p><code>4Kc</code>中与内存管理相关的<code>CP0</code>寄存器如下：</p>
+<p><img src="D:\blog\source\images\OS_L2_G2.png" alt="image-20250331100544100"></p>
+<p><img src="/images/OS_L2_G2.png" alt="OS_L2_G2" title="file"></p>
+
+<p><code>4Kc</code>中的<code>TLB</code>采用奇偶页的设计，即使用<code>VPN</code>中的高19位与<code>ASID</code>作为<code>Key</code>，一次查找到两个<code>Data</code>（一对相邻页面的两个页表项），并用<code>VPN</code>中的最低1位在两个<code>Data</code>中选择命中的结果。因此在对<code>TLB</code>进行维护（无效化、重填）时，除了维护目标页面，同时还需要维护目标页面的邻居页面。</p>
+<p><img src="D:\blog\source\images\OS_L2_G3.png" alt="image-20250331100733565"></p>
+<p><img src="/images/OS_L2_G3.png" alt="OS_L2_G3" title="file"></p>
+
+<blockquote>
+<p><code>TLB</code>事实上构建了一个映射<code>TLB</code> → &lt;<code>PFN</code>，C，D，V，G &gt;。(Physical Frame Number)</p>
+</blockquote>
+<h3 id="TLB相关指令"><a href="#TLB相关指令" class="headerlink" title="TLB相关指令"></a><code>TLB</code>相关指令</h3><ul>
+<li><code>tlbr</code>：以<code>Index</code>寄存器中的值为索引，读出<code>TLB</code>中对应的表项到<code>EntryHi</code>与<code>EntryLo0</code>、<code>EntryLo1</code>。</li>
+<li><code>tlbwi</code>：以<code>Index</code>寄存器中的值为索引，将此时<code>EntryHi</code>与<code>EntryLo0</code>、<code>EntryLo1</code>的值写到索引指定的<code>TLB</code>表项中。</li>
+<li><code>tlbwr</code>：将<code>EntryHi</code>与<code>EntryLo0</code>、<code>EntryLo1</code>的数据随机写到一个<code>TLB</code>表项中（此处使用<code>Random</code>寄存器来“随机”指定表项，<code>Random</code>寄存器本质上是一个不停运行的循环计数器）</li>
+<li><code>tlbp</code>：根据<code>EntryHi</code>中的<code>Key</code>（包含<code>VPN</code>与<code>ASID</code>），查找<code>TLB</code>中与之对应的表项，并将表项的索引存入<code>Index</code>寄存器（若未找到匹配项，则<code>Index</code>最高位被置1）</li>
+</ul>
+<blockquote>
+<p><code>tlbp</code>中，p代表probe，搜索与指定虚拟地址（此时虚拟地址体现于<code>EntryHi</code>）相匹配的条目。</p>
+</blockquote>
+<p>软件必须经过<code>CP0</code>与<code>TLB</code>交互，因此软件操作<code>TLB</code>的流程总是分为两步： </p>
+<ul>
+<li>填写<code>CP0</code>寄存器。</li>
+<li>使用 <code>TLB</code>相关指令。</li>
+</ul>
+<h3 id="TLB的维护"><a href="#TLB的维护" class="headerlink" title="TLB的维护"></a><code>TLB</code>的维护</h3><ol>
+<li><p>更新页表中虚拟地址<code>va</code>对应的页表项时，将<code>TLB</code>中对应的旧表项无效化。</p>
+</li>
+<li><p>在下次访问该虚拟地址时，硬件会触发<code>TLB</code>重填异常，此时操作系统对<code>TLB</code>进行重填。</p>
+<p><code>tlb_invalidate</code>函数实现删除特定虚拟地址在<code>TLB</code>中的旧表项（无效化）。</p>
+</li>
+</ol>
+<p><code>_do_tlb_refill(Pte *pte, u_intva, u_intasid)</code>重填。</p>
+<p><img src="D:\blog\source\images\OS_L2_G4.png" alt="image-20250331112335536"></p>
+<p><img src="/images/OS_L2_G4.png" alt="OS_L2_G4" title="file"></p>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">étoile</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/04/14/BUAA-OS-Lab2/">http://example.com/2025/04/14/BUAA-OS-Lab2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Chères étoile</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></div><div class="post_share"><div class="social-share" data-image="/img/OS_2.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/03/28/BUAA-OS-Lab1/" title="BUAA-OS-Lab1"><img class="cover" src="/img/OS_1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BUAA-OS-Lab1</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/03/13/BUAA-OS-Lab0/" title="[BUAA-OS]Lab0"><img class="cover" src="/img/OS_0.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-13</div><div class="title">[BUAA-OS]Lab0</div></div></a></div><div><a href="/2025/03/28/BUAA-OS-Lab1/" title="BUAA-OS-Lab1"><img class="cover" src="/img/OS_1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-28</div><div class="title">BUAA-OS-Lab1</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">étoile</div><div class="author-info__description">人生海海 山山而川</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hellooo, welcome to étoile's Blog !</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab2%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">Lab2：内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E5%AD%98%E6%B5%81%E7%A8%8B%E6%A6%82%E8%A7%88"><span class="toc-number">1.1.</span> <span class="toc-text">访存流程概览</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%80%81"><span class="toc-number">1.1.1.</span> <span class="toc-text">内核态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="toc-number">1.1.2.</span> <span class="toc-text">内存布局</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E7%A8%8B%E5%BA%8F%E5%90%AF%E5%8A%A8"><span class="toc-number">1.2.</span> <span class="toc-text">内核程序启动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mips-detect-memory-u-int-memsize"><span class="toc-number">1.2.1.</span> <span class="toc-text">mips_detect_memory(u_int _memsize)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mips-vm-init"><span class="toc-number">1.2.2.</span> <span class="toc-text">mips_vm_init()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">物理内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%9D%97"><span class="toc-number">1.3.1.</span> <span class="toc-text">页控制块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.4.</span> <span class="toc-text">虚拟内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%BA%A7%E9%A1%B5%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.4.1.</span> <span class="toc-text">两级页表结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E5%86%85%E5%AD%98%E4%B8%8ETLB%E9%87%8D%E5%A1%AB"><span class="toc-number">1.5.</span> <span class="toc-text">访问内存与TLB重填</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLB%E7%BB%84%E6%88%90"><span class="toc-number">1.5.1.</span> <span class="toc-text">TLB组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4Kc%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84"><span class="toc-number">1.5.2.</span> <span class="toc-text">4Kc处理器架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLB%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4"><span class="toc-number">1.5.3.</span> <span class="toc-text">TLB相关指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLB%E7%9A%84%E7%BB%B4%E6%8A%A4"><span class="toc-number">1.5.4.</span> <span class="toc-text">TLB的维护</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/14/BUAA-OS-Lab2/" title="BUAA-OS-Lab2"><img src="/img/OS_2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA-OS-Lab2"/></a><div class="content"><a class="title" href="/2025/04/14/BUAA-OS-Lab2/" title="BUAA-OS-Lab2">BUAA-OS-Lab2</a><time datetime="2025-04-14T03:59:57.000Z" title="发表于 2025-04-14 11:59:57">2025-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/28/BUAA-OS-Lab1/" title="BUAA-OS-Lab1"><img src="/img/OS_1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA-OS-Lab1"/></a><div class="content"><a class="title" href="/2025/03/28/BUAA-OS-Lab1/" title="BUAA-OS-Lab1">BUAA-OS-Lab1</a><time datetime="2025-03-28T08:51:31.000Z" title="发表于 2025-03-28 16:51:31">2025-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/19/BUAA-OO-%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%EF%BC%9A%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%96%E7%AE%80/" title="[BUAA-OO]第一单元：表达式化简"><img src="/img/OO_Unit1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="[BUAA-OO]第一单元：表达式化简"/></a><div class="content"><a class="title" href="/2025/03/19/BUAA-OO-%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%EF%BC%9A%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%96%E7%AE%80/" title="[BUAA-OO]第一单元：表达式化简">[BUAA-OO]第一单元：表达式化简</a><time datetime="2025-03-19T00:27:51.000Z" title="发表于 2025-03-19 08:27:51">2025-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/13/BUAA-OS-Lab0/" title="[BUAA-OS]Lab0"><img src="/img/OS_0.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="[BUAA-OS]Lab0"/></a><div class="content"><a class="title" href="/2025/03/13/BUAA-OS-Lab0/" title="[BUAA-OS]Lab0">[BUAA-OS]Lab0</a><time datetime="2025-03-13T06:05:44.000Z" title="发表于 2025-03-13 14:05:44">2025-03-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/03/BUAA-OO-%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%E7%AC%AC1%E6%AC%A1%E4%BD%9C%E4%B8%9A/" title="[BUAA-OO]第一单元第1次作业"><img src="/img/OO_hw1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="[BUAA-OO]第一单元第1次作业"/></a><div class="content"><a class="title" href="/2025/03/03/BUAA-OO-%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%E7%AC%AC1%E6%AC%A1%E4%BD%9C%E4%B8%9A/" title="[BUAA-OO]第一单元第1次作业">[BUAA-OO]第一单元第1次作业</a><time datetime="2025-03-03T07:20:46.000Z" title="发表于 2025-03-03 15:20:46">2025-03-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By étoile</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
